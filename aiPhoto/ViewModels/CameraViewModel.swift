@@ -65,6 +65,8 @@ final class CameraViewModel: ObservableObject {
 
     func onCancelTap() {
         noSubjectTimer?.cancel()
+        noSubjectTimer = nil
+        lastSeenSubject = nil
         state = .idle
         currentOffset = 1.0
         hint = ""
