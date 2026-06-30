@@ -32,8 +32,12 @@ final class LogWriterTests: XCTestCase {
         let oldFile = tempDir.appendingPathComponent("2020-01-01.log")
         try "old".write(to: oldFile, atomically: true, encoding: .utf8)
         try writer.write(level: .info, message: "new", context: nil)
+        let preCleanupFiles = try FileManager.default.contentsOfDirectory(at: tempDir, includingPropertiesForKeys: nil)
+        XCTAssertEqual(preCleanupFiles.count, 2, "应存在1个旧文件 + 1个当日文件")
         // 触发清理
         try writer.cleanup()
         XCTAssertFalse(FileManager.default.fileExists(atPath: oldFile.path))
+        let postCleanupFiles = try FileManager.default.contentsOfDirectory(at: tempDir, includingPropertiesForKeys: nil)
+        XCTAssertEqual(postCleanupFiles.count, 1, "清理后应只剩当日文件")
     }
 }

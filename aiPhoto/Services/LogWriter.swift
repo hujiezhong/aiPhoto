@@ -41,16 +41,25 @@ final class LogWriter {
         }
     }
 
+    private static let iso8601: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        return f
+    }()
+
+    private static let dayFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        f.timeZone = TimeZone(identifier: "UTC")
+        return f
+    }()
+
     private func todayFileURL() -> URL {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        formatter.timeZone = TimeZone(identifier: "UTC")
-        let filename = "\(formatter.string(from: Date())).log"
+        let filename = "\(Self.dayFormatter.string(from: Date())).log"
         return directory.appendingPathComponent(filename)
     }
 
     private func format(level: Level, message: String, context: [String: String]?) -> String {
-        let ts = ISO8601DateFormatter().string(from: Date())
+        let ts = Self.iso8601.string(from: Date())
         var line = "\(ts) [\(level.rawValue.uppercased())] \(message)"
         if let context = context, !context.isEmpty {
             let ctx = context.map { "\($0.key)=\($0.value)" }.joined(separator: " ")
