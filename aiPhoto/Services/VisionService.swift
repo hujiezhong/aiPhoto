@@ -33,7 +33,11 @@ final class VisionService: VisionServiceProtocol {
                 })
             }
             let handler = VNImageRequestHandler(cvPixelBuffer: buffer, orientation: .up, options: [:])
-            try? handler.perform([request])
+            do {
+                try handler.perform([request])
+            } catch {
+                cont.resume(returning: [])
+            }
         }
     }
 
@@ -46,7 +50,11 @@ final class VisionService: VisionServiceProtocol {
                 })
             }
             let handler = VNImageRequestHandler(cvPixelBuffer: buffer, orientation: .up, options: [:])
-            try? handler.perform([request])
+            do {
+                try handler.perform([request])
+            } catch {
+                cont.resume(returning: [])
+            }
         }
     }
 
