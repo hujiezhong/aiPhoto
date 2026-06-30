@@ -21,7 +21,7 @@ final class CameraViewModel: ObservableObject {
 
     private let camera: CameraServiceProtocol
     private let vision: VisionServiceProtocol
-    private let model: VisionModelAdapter
+    private let modelProvider: (ModelKind) -> VisionModelAdapter
     private let saver: PhotoSaverProtocol
     private let settings: AppSettingsStore
     private let keychain: KeychainStore
@@ -32,14 +32,14 @@ final class CameraViewModel: ObservableObject {
     init(
         camera: CameraServiceProtocol,
         vision: VisionServiceProtocol,
-        model: VisionModelAdapter,
+        modelProvider: @escaping (ModelKind) -> VisionModelAdapter,
         saver: PhotoSaverProtocol,
         settings: AppSettingsStore,
         keychain: KeychainStore
     ) {
         self.camera = camera
         self.vision = vision
-        self.model = model
+        self.modelProvider = modelProvider
         self.saver = saver
         self.settings = settings
         self.keychain = keychain
@@ -118,6 +118,7 @@ final class CameraViewModel: ObservableObject {
     private func performAnalysis() async {
         do {
             let jpeg = try await camera.captureCurrentFrameJPEG(quality: 0.7)
+            let model = modelProvider(settings.settings.selectedModel)
             let plan = try await model.analyze(imageJPEG: jpeg, model: settings.settings.selectedModel)
             state = .guiding(plan: plan)
             hint = plan.hint

@@ -33,8 +33,6 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
-        UIRequiredDeviceCapabilities:
-          - armv7
         NSCameraUsageDescription: "aiPhoto 需要使用相机以拍照和实时预览"
         NSPhotoLibraryAddUsageDescription: "aiPhoto 需要将拍摄的照片保存到相册"
     settings:

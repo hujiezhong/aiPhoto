@@ -33,7 +33,7 @@ final class CameraViewModelTests: XCTestCase {
         CameraViewModel(
             camera: camera,
             vision: vision,
-            model: model,
+            modelProvider: { [weak model] _ in model ?? FakeVisionModelAdapter(kind: .openai) },
             saver: saver,
             settings: settings,
             keychain: KeychainStore(service: "test-\(UUID().uuidString)")

@@ -11,12 +11,11 @@ struct aiPhotoApp: App {
         let camera = CameraService()
         let vision = VisionService()
         let saver = PhotoSaver()
-        let model = Self.makeAdapter(settings: settings, keychain: keychain)
 
         let cvm = CameraViewModel(
             camera: camera,
             vision: vision,
-            model: model,
+            modelProvider: { kind in Self.makeAdapter(kind: kind, settings: settings, keychain: keychain) },
             saver: saver,
             settings: settings,
             keychain: keychain
@@ -39,11 +38,12 @@ struct aiPhotoApp: App {
     }
 
     private static func makeAdapter(
+        kind: ModelKind,
         settings: AppSettingsStore,
         keychain: KeychainStore
     ) -> VisionModelAdapter {
         let key = (try? keychain.get("apiKey")) ?? ""
-        switch settings.settings.selectedModel {
+        switch kind {
         case .openai: return OpenAIAdapter(apiKey: key)
         case .claude: return ClaudeAdapter(apiKey: key)
         case .qwenVl: return QwenAdapter(apiKey: key)
