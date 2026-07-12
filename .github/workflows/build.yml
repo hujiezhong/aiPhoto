@@ -1,0 +1,65 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:    # 手动触发
+
+jobs:
+  test:
+    name: Build & Test on macOS
+    runs-on: macos-14    # GitHub 免费 macOS runner（M1）
+
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_15.4.app/Contents/Developer
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Show project
+        run: ls -la aiPhoto.xcodeproj/ || true
+
+      - name: Build
+        run: |
+          xcodebuild \
+            -project aiPhoto.xcodeproj \
+            -scheme aiPhoto \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            build | xcbeautify || xcodebuild \
+            -project aiPhoto.xcodeproj \
+            -scheme aiPhoto \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            build
+
+      - name: Run unit tests
+        run: |
+          xcodebuild test \
+            -project aiPhoto.xcodeproj \
+            -scheme aiPhoto \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            | xcbeautify || xcodebuild test \
+            -project aiPhoto.xcodeproj \
+            -scheme aiPhoto \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest'
+
+      - name: Upload test results (if failed)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            build/Logs/Test/*.xcresult
+            ~/Library/Developer/Xcode/DerivedData/**/Logs/**/*.xcresult
+          if-no-files-found: ignore
