@@ -17,7 +17,7 @@ struct CameraPreviewView: UIViewRepresentable {
     final class PreviewContainer: UIView {
         override func layoutSubviews() {
             super.layoutSubviews()
-            if let preview = sublayers?.first {
+            if let preview = layer.sublayers?.first {
                 preview.frame = bounds
             }
         }

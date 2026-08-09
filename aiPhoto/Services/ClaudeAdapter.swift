@@ -21,7 +21,7 @@ final class ClaudeAdapter: VisionModelAdapter {
 
     func analyze(imageJPEG: Data, model: ModelKind) async throws -> GuidancePlan {
         let base64 = imageJPEG.base64EncodedString()
-        let body = PromptBuilder.claudeRequestBody(imageBase64: base64, model: model)
+        let body = PromptBuilder.claudeRequestBody(imageBase64: base64, model: self.model)
         var request = URLRequest(url: endpoint.appendingPathComponent("messages"))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

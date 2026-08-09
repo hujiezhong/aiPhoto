@@ -52,6 +52,8 @@ struct GuidanceOverlayView: View {
                         }
                     }
                 }
+            case .aligned:
+                EmptyView()
             case .error(let err):
                 VStack(spacing: 12) {
                     Text(err.errorDescription ?? "发生错误")
