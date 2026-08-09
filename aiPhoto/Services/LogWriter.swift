@@ -32,10 +32,12 @@ final class LogWriter {
 
     func cleanup() throws {
         let cutoff = Date().addingTimeInterval(-Double(retentionDays) * 86400)
-        let files = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.contentModificationDateKey])
+        let files = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
         for file in files {
-            let values = try file.resourceValues(forKeys: [.contentModificationDateKey])
-            if let mtime = values.contentModificationDate, mtime < cutoff {
+            // 文件名格式 yyyy-MM-dd.log：基于文件名日期判断是否过期
+            // （不能用 mtime：当日的日志 mtime 也是几分钟前，会被误删）
+            let name = file.deletingPathExtension().lastPathComponent
+            if let fileDate = Self.dayFormatter.date(from: name), fileDate < cutoff {
                 try? FileManager.default.removeItem(at: file)
             }
         }
