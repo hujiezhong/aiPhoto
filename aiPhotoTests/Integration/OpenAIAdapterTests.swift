@@ -86,6 +86,8 @@ final class OpenAIAdapterTests: XCTestCase {
             } else {
                 XCTFail("错误的错误类型: \(error)")
             }
+        } catch {
+            XCTFail("unexpected error: \(error)")
         }
     }
 
