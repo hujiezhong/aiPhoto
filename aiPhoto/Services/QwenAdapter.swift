@@ -21,7 +21,7 @@ final class QwenAdapter: VisionModelAdapter {
 
     func analyze(imageJPEG: Data, model: ModelKind) async throws -> GuidancePlan {
         let base64 = imageJPEG.base64EncodedString()
-        let body = PromptBuilder.qwenRequestBody(imageBase64: base64, model: model)
+        let body = PromptBuilder.qwenRequestBody(imageBase64: base64, model: self.model)
         var request = URLRequest(url: endpoint.appendingPathComponent("chat/completions"))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
