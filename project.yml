@@ -51,6 +51,7 @@ targets:
       base:
         BUNDLE_LOADER: $(TEST_HOST)
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/aiPhoto.app/aiPhoto
+        GENERATE_INFOPLIST_FILE: YES
 
   aiPhotoUITests:
     type: bundle.ui-testing
@@ -62,3 +63,4 @@ targets:
     settings:
       base:
         TEST_TARGET_NAME: aiPhoto
+        GENERATE_INFOPLIST_FILE: YES
