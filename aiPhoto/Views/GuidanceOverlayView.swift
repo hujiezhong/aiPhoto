@@ -16,7 +16,7 @@ struct GuidanceOverlayView: View {
                     .tint(.white)
                     .padding(20)
                     .background(.black.opacity(0.5), in: RoundedRectangle(cornerRadius: 12))
-            case .guiding(let plan), .aligned:
+            case .guiding(let plan), .aligned(let plan):
                 GeometryReader { geo in
                     let anchor = CGPoint(
                         x: plan.anchorPoint.x * geo.size.width,
@@ -27,8 +27,8 @@ struct GuidanceOverlayView: View {
                         Circle()
                             .stroke(alignmentColor, lineWidth: 3)
                             .frame(width: 60, height: 60)
-                            .scaleEffect(state == .aligned ? 1.2 : 1.0)
-                            .opacity(state == .aligned ? 1.0 : 0.8)
+                            .scaleEffect(isAligned ? 1.2 : 1.0)
+                            .opacity(isAligned ? 1.0 : 0.8)
                             .position(anchor)
                             .animation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true),
                                        value: state)
@@ -52,8 +52,6 @@ struct GuidanceOverlayView: View {
                         }
                     }
                 }
-            case .aligned:
-                EmptyView()
             case .error(let err):
                 VStack(spacing: 12) {
                     Text(err.errorDescription ?? "发生错误")
@@ -74,6 +72,11 @@ struct GuidanceOverlayView: View {
             if offset < 0.1 { return .yellow }
             return .white
         }
+    }
+
+    private var isAligned: Bool {
+        if case .aligned = state { return true }
+        return false
     }
 
     private func anchorDiameter(plan: GuidancePlan, in size: CGSize) -> CGFloat {

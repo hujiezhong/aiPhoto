@@ -9,7 +9,7 @@ final class CameraViewModel: ObservableObject {
         case idle
         case analyzing
         case guiding(plan: GuidancePlan)
-        case aligned
+        case aligned(plan: GuidancePlan)
         case error(AppError)
     }
 
@@ -98,7 +98,7 @@ final class CameraViewModel: ObservableObject {
             if settings.settings.autoCapture {
                 Task { [weak self] in await self?.captureAndSave() }
             } else {
-                state = .aligned
+                state = .aligned(plan: plan)
             }
         }
     }
