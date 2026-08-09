@@ -32,7 +32,6 @@ jobs:
             -scheme aiPhoto \
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             -configuration Debug \
-            CODE_SIGNING_ALLOWED=NO \
             build
 
       - name: Run unit tests (unsigned)
@@ -41,8 +40,7 @@ jobs:
             -project aiPhoto.xcodeproj \
             -scheme aiPhoto \
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
-            -configuration Debug \
-            CODE_SIGNING_ALLOWED=NO
+            -configuration Debug
 
   signed-ipa:
     name: Signed .ipa (for sideload)
