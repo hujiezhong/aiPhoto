@@ -10,7 +10,7 @@ on:
 jobs:
   test:
     name: Build & Test on macOS
-    runs-on: macos-14
+    runs-on: macos-15    # macOS 15 + Xcode 16（xcodegen 生成 Xcode 16 格式）
 
     steps:
       - name: Checkout
@@ -44,7 +44,7 @@ jobs:
 
   signed-ipa:
     name: Signed .ipa (for sideload)
-    runs-on: macos-14
+    runs-on: macos-15
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     # 仅在 push 到 main 时跑（避免 PR 触发）
