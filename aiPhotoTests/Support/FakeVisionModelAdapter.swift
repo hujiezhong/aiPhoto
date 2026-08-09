@@ -1,3 +1,4 @@
+import Foundation
 @testable import aiPhoto
 
 final class FakeVisionModelAdapter: VisionModelAdapter {
