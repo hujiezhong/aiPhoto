@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 struct CameraView: View {
     @ObservedObject var viewModel: CameraViewModel
